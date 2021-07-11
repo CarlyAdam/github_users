@@ -2,6 +2,7 @@ package com.carlyadam.github.network
 
 import com.carlyadam.github.utils.MockResponseFileReader
 import com.carlyadam.github.data.api.ApiService
+import com.carlyadam.github.data.api.ApiService.Companion.API_KEY
 import com.carlyadam.github.data.responses.GithubResponse
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
@@ -46,7 +47,7 @@ class ApiUnitTest {
             Gson().fromJson(response.getBody()!!.readUtf8(), GithubResponse::class.java)
 
         // when
-        val listRepo = apiService.users(0, 25, "carlyadam")
+        val listRepo = apiService.users(0, 25, "carlyadam", API_KEY)
 
         // then
         assertEquals(

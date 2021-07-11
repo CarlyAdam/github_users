@@ -1,4 +1,4 @@
-package com.carlyadam.github.ui
+package com.carlyadam.github.ui.github
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/giphyFragment"
+        android:name="com.carlyadam.github.ui.github.GithubFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_github" >
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.carlyadam.github.ui.welcome.WelcomeFragment"
+        android:label="@string/app_name" >
+        <action
+            android:id="@+id/action_welcome_search"
+            app:destination="@id/giphyFragment"
+            app:enterAnim="@anim/left_in"
+            app:exitAnim="@anim/left_out"
+            app:popEnterAnim="@anim/right_in"
+            app:popExitAnim="@anim/right_out"/>
+    </fragment>
+</navigation>

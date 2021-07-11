@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="avatar_width">320dp</dimen>
+    <dimen name="avatar_height">200dp</dimen>
+</resources>
