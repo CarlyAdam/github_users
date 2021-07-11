@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">github</string>
+    <string name="no_connection">Connection problem, please check your connection.</string>
+    <string name="retry">Retry</string>
+    <string name="no_data">No data available</string>
+    <string name="details">Details</string>
+    <string name="search">Search</string>
 </resources>

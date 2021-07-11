@@ -12,7 +12,7 @@ interface ApiService {
     }
 
     @GET("users")
-    suspend fun giphy(
+    suspend fun users(
         @Query("page") offset: Int,
         @Query("per_page") limit: Int,
         @Query("q") query: String
