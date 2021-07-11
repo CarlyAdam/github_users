@@ -1,9 +1,9 @@
-package com.carlyadam.giphy.utils
+package com.carlyadam.github.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import com.carlyadam.giphy.R
+import com.carlyadam.github.R
 import okhttp3.Interceptor
 import okhttp3.Response
 import java.io.IOException
