@@ -1,0 +1,117 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'org.jlleitschuh.gradle.ktlint-idea'
+    id 'com.bugsnag.android.gradle'
+    id 'com.google.gms.google-services'
+    id 'com.facebook.testing.screenshot'
+}
+
+android {
+    compileSdk 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.carlyadam.github"
+        minSdk 23
+        targetSdk 30
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    testOptions {
+        animationsDisabled = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_version"
+    implementation "androidx.core:core-ktx:$rootProject.core_ktx"
+    implementation "androidx.appcompat:appcompat:$rootProject.appcompat"
+    implementation "com.google.android.material:material:$rootProject.material"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common:$rootProject.lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$rootProject.lifecycleVersion"
+
+    //retrofit
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit"
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttp"
+    implementation "com.google.code.gson:gson:$rootProject.gson"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.convertergson"
+
+    //Kotlin Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
+
+    //hilt for dependency injection
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    //pagination
+    implementation "androidx.paging:paging-runtime-ktx:$rootProject.paging_version"
+
+    //shimmer
+    implementation "com.facebook.shimmer:shimmer:$rootProject.shimmer"
+
+    //leakcanary
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.leakcanary"
+
+    //bugsnag
+    implementation "com.bugsnag:bugsnag-android:$rootProject.bugsnag"
+
+    //glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glide"
+
+    //firebase
+    implementation platform("com.google.firebase:firebase-bom:$rootProject.firebase_bom")
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    //showcase
+    implementation "com.github.faruktoptas:FancyShowCaseView:$rootProject.showcase"
+
+    //lottie
+    implementation "com.airbnb.android:lottie:$rootProject.lottieVersion"
+
+    //TEST
+    testImplementation "junit:junit:$rootProject.junit"
+    //mockk
+    testImplementation "io.mockk:mockk:$rootProject.mockk"
+    androidTestImplementation "io.mockk:mockk:$rootProject.mockk"
+    //mockwebserver
+    testImplementation("com.squareup.okhttp3:mockwebserver:$rootProject.mockwebserver")
+    // Espresso dependencies
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espresso_core"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.espresso_core"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$rootProject.espresso_core"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$rootProject.espresso_core"
+}

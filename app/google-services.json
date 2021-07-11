@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "608659658989",
+    "project_id": "github-c2c63",
+    "storage_bucket": "github-c2c63.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608659658989:android:bb88eb95a5800024c654e4",
+        "android_client_info": {
+          "package_name": "com.carlyadam.github"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608659658989-8q9jo92em7lnqoibgvghevm52muo3iq9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carlyadam.github",
+            "certificate_hash": "7714d7d5705296a844528ef56e2b956f6cf72b73"
+          }
+        },
+        {
+          "client_id": "608659658989-uob129pfii8siqbk0d0112020fv9s0ck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByF8QiR6GVGT5NZAyB-2Pj7GSJS7Pc6jc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608659658989-uob129pfii8siqbk0d0112020fv9s0ck.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
