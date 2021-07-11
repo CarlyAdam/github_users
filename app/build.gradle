@@ -22,7 +22,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.carlyadam.github.MyTestRunner"
         buildConfigField("String", "API_ACCESS_KEY", api_access_key)
     }
 
