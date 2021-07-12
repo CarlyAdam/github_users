@@ -1,20 +1,21 @@
 package com.carlyadam.github.repository
 
 import android.content.Context
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.bumptech.glide.load.HttpException
 import com.carlyadam.github.R
 import com.carlyadam.github.data.api.ApiService
 import com.carlyadam.github.data.api.ApiService.Companion.API_KEY
-import com.carlyadam.github.data.model.User
+import com.carlyadam.github.data.api.model.User
+import com.carlyadam.github.data.db.dao.UserDao
 import java.io.IOException
 
 class GithubDataSource(
     private val apiService: ApiService,
     private val context: Context,
-    private val query: String
+    private val query: String,
+    private val userDao: UserDao
 ) :
     PagingSource<Int, User>() {
 
@@ -24,8 +25,14 @@ class GithubDataSource(
             val response = apiService.users(page, 25, query, API_KEY)
 
             val userList = response.body()!!.items
-
-            Log.i("AAAA",userList.size.toString())
+            val userLocals = userDao.getUsersFavorite(true)
+            for (i in 0 until userList.size) {
+                for (j in 0 until userLocals.size) {
+                    if (userList[i].id == userLocals[j].id) {
+                        userList[i].favorite = userLocals[j].favorite
+                    }
+                }
+            }
 
             LoadResult.Page(
                 data = userList,

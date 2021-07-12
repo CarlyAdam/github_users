@@ -1,13 +1,12 @@
 package com.carlyadam.github.ui.github.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.carlyadam.github.data.model.User
+import com.carlyadam.github.data.api.model.User
 import com.carlyadam.github.databinding.ItemUserBinding
 import com.carlyadam.github.utils.loadImage
 
@@ -43,6 +42,13 @@ class GithubAdapter(
         val data = getItem(position)
         holder.apply {
             holder.bind(data!!)
+
+            holder.binding.checkBox.apply {
+                this.setOnClickListener {
+                    listener.onFavoriteTap(data,
+                    this.isChecked)
+                }
+        }
         }
     }
 
@@ -64,11 +70,14 @@ class GithubAdapter(
         fun bind(user: User) {
             binding.apply {
                 imageViewUser.loadImage(context, user.avatar_url, progressBar)
+                textViewUserName.text = user.login
+                checkBox.isChecked = user.favorite
             }
         }
     }
 
     interface AdapterListener {
         fun onItemTap(user: User)
+        fun onFavoriteTap(user: User, favorite: Boolean)
     }
 }

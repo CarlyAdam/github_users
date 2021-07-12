@@ -1,7 +1,6 @@
 package com.carlyadam.github.ui.github
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -10,17 +9,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.carlyadam.github.R
-import com.carlyadam.github.data.model.User
+import com.carlyadam.github.data.api.model.User
 import com.carlyadam.github.databinding.FragmentGithubBinding
 import com.carlyadam.github.ui.github.adapter.GithubAdapter
 import com.carlyadam.github.ui.github.adapter.GithubLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.carlyadam.github.data.db.model.User as DbUser
 
 @AndroidEntryPoint
 class GithubFragment :
@@ -132,6 +130,15 @@ class GithubFragment :
 
     override fun onItemTap(user: User) {
         // TODO: 7/11/21
+    }
+
+    override fun onFavoriteTap(user: User, favorite: Boolean) {
+        val userDb = DbUser(user.id, user.login, user.avatar_url, favorite, user.score)
+        setUserFavorite(userDb, favorite)
+    }
+
+    private fun setUserFavorite(userDb: DbUser, favorite: Boolean) {
+            githubViewModel.setUserFavorite(userDb, favorite)
     }
 
     override fun onDestroy() {

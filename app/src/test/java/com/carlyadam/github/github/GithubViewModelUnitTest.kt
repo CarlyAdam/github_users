@@ -1,7 +1,7 @@
 package com.carlyadam.github.github
 
 import androidx.paging.PagingData
-import com.carlyadam.github.data.model.User
+import com.carlyadam.github.data.api.model.User
 import com.carlyadam.github.ui.github.GithubViewModel
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery

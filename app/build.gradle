@@ -103,8 +103,22 @@ dependencies {
     //lottie
     implementation "com.airbnb.android:lottie:$rootProject.lottieVersion"
 
+    //room
+    implementation "androidx.room:room-runtime:$rootProject.room"
+    implementation "androidx.room:room-ktx:$rootProject.room"
+    kapt "androidx.room:room-compiler:$rootProject.room"
+
+    //encription
+    implementation "net.zetetic:android-database-sqlcipher:$rootProject.sqlcipher"
+    implementation "androidx.sqlite:sqlite:$rootProject.sqlite"
+
     //TEST
     testImplementation "junit:junit:$rootProject.junit"
+    testImplementation 'org.robolectric:robolectric:' + rootProject.robolectricVersion
+    testImplementation 'androidx.test:core:' + rootProject.coreVersion
+    testImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion
+    testImplementation 'junit:junit:4.12'
+
     //mockk
     testImplementation "io.mockk:mockk:$rootProject.mockk"
     androidTestImplementation "io.mockk:mockk:$rootProject.mockk"

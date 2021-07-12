@@ -1,4 +1,4 @@
-package com.carlyadam.github.data.model
+package com.carlyadam.github.data.api.model
 
 data class User(
     val avatar_url: String,
@@ -19,5 +19,6 @@ data class User(
     val starred_url: String,
     val subscriptions_url: String,
     val type: String,
-    val url: String
+    val url: String,
+    var favorite: Boolean
 )

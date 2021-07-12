@@ -1,6 +1,6 @@
-package com.carlyadam.github.data.responses
+package com.carlyadam.github.data.api.responses
 
-import com.carlyadam.github.data.model.User
+import com.carlyadam.github.data.api.model.User
 
 data class GithubResponse(
     val incomplete_results: Boolean,

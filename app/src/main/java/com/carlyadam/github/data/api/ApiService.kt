@@ -1,7 +1,7 @@
 package com.carlyadam.github.data.api
 
 import com.carlyadam.github.BuildConfig
-import com.carlyadam.github.data.responses.GithubResponse
+import com.carlyadam.github.data.api.responses.GithubResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
