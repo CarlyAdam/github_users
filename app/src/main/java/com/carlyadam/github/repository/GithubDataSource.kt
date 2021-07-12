@@ -1,53 +1,131 @@
 package com.carlyadam.github.repository
 
-import android.content.Context
-import androidx.paging.PagingSource
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
 import androidx.paging.PagingState
-import com.bumptech.glide.load.HttpException
-import com.carlyadam.github.R
+import androidx.paging.RemoteMediator
+import androidx.room.withTransaction
 import com.carlyadam.github.data.api.ApiService
 import com.carlyadam.github.data.api.ApiService.Companion.API_KEY
-import com.carlyadam.github.data.api.model.User
-import com.carlyadam.github.data.db.dao.UserDao
+import com.carlyadam.github.data.db.AppDatabase
+import com.carlyadam.github.data.db.model.RemoteKeys
+import com.carlyadam.github.data.db.model.User
+import retrofit2.HttpException
 import java.io.IOException
 
+private const val GITHUB_STARTING_PAGE_INDEX = 1
+const val IN_QUALIFIER = "in:name,description"
+
+@OptIn(ExperimentalPagingApi::class)
 class GithubDataSource(
-    private val apiService: ApiService,
-    private val context: Context,
     private val query: String,
-    private val userDao: UserDao
-) :
-    PagingSource<Int, User>() {
+    private val service: ApiService,
+    private val appDatabase: AppDatabase
+) : RemoteMediator<Int, User>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, User> {
-        val page = params.key ?: 1
-        return try {
-            val response = apiService.users(page, 25, query, API_KEY)
+    override suspend fun initialize(): InitializeAction {
+        // Launch remote refresh as soon as paging starts and do not trigger remote prepend or
+        // append until refresh has succeeded. In cases where we don't mind showing out-of-date,
+        // cached offline data, we can return SKIP_INITIAL_REFRESH instead to prevent paging
+        // triggering remote refresh.
+        return InitializeAction.LAUNCH_INITIAL_REFRESH
+    }
 
-            val userList = response.body()!!.items
-            val userLocals = userDao.getUsersFavorite(true)
-            for (i in 0 until userList.size) {
-                for (j in 0 until userLocals.size) {
-                    if (userList[i].id == userLocals[j].id) {
-                        userList[i].favorite = userLocals[j].favorite
-                    }
-                }
+    override suspend fun load(loadType: LoadType, state: PagingState<Int, User>): MediatorResult {
+
+        val page = when (loadType) {
+            LoadType.REFRESH -> {
+                val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
+                remoteKeys?.nextKey?.minus(1) ?: GITHUB_STARTING_PAGE_INDEX
             }
+            LoadType.PREPEND -> {
+                val remoteKeys = getRemoteKeyForFirstItem(state)
+                // If remoteKeys is null, that means the refresh result is not in the database yet.
+                // We can return Success with `endOfPaginationReached = false` because Paging
+                // will call this method again if RemoteKeys becomes non-null.
+                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                // the end of pagination for prepend.
+                val prevKey = remoteKeys?.prevKey
+                if (prevKey == null) {
+                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                }
+                prevKey
+            }
+            LoadType.APPEND -> {
+                val remoteKeys = getRemoteKeyForLastItem(state)
+                // If remoteKeys is null, that means the refresh result is not in the database yet.
+                // We can return Success with `endOfPaginationReached = false` because Paging
+                // will call this method again if RemoteKeys becomes non-null.
+                // If remoteKeys is NOT NULL but its prevKey is null, that means we've reached
+                // the end of pagination for append.
+                val nextKey = remoteKeys?.nextKey
+                if (nextKey == null) {
+                    return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                }
+                nextKey
+            }
+        }
 
-            LoadResult.Page(
-                data = userList,
-                prevKey = if (page == 1) null else page - 1,
-                nextKey = if (response.body()!!.items.isEmpty()) null else page + 1
-            )
+        val apiQuery = query + IN_QUALIFIER
+
+        try {
+            val apiResponse = service.users(page, state.config.pageSize, apiQuery, API_KEY)
+
+            val userList = apiResponse.body()!!.items
+            val endOfPaginationReached = userList.isEmpty()
+            appDatabase.withTransaction {
+                // clear all tables in the database
+                if (loadType == LoadType.REFRESH) {
+                    appDatabase.remoteKeysDao().clearRemoteKeys()
+                    appDatabase.userDao().clearUsers()
+                }
+                val prevKey = if (page == GITHUB_STARTING_PAGE_INDEX) null else page - 1
+                val nextKey = if (endOfPaginationReached) null else page + 1
+                val keys = userList.map {
+                    RemoteKeys(userId = it.id, prevKey = prevKey, nextKey = nextKey)
+                }
+                appDatabase.remoteKeysDao().insertAll(keys)
+
+
+                appDatabase.userDao().insertAll(userList)
+            }
+            return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: IOException) {
-            val error = IOException(context.getString(R.string.no_connection))
-            LoadResult.Error(error)
+            return MediatorResult.Error(exception)
         } catch (exception: HttpException) {
-            LoadResult.Error(exception)
+            return MediatorResult.Error(exception)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, User>): Int? {
-        return state.anchorPosition
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, User>): RemoteKeys? {
+        // Get the last page that was retrieved, that contained items.
+        // From that last page, get the last item
+        return state.pages.lastOrNull() { it.data.isNotEmpty() }?.data?.lastOrNull()
+            ?.let { user ->
+                // Get the remote keys of the last item retrieved
+                appDatabase.remoteKeysDao().remoteKeysUserId(user.id)
+            }
+    }
+
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, User>): RemoteKeys? {
+        // Get the first page that was retrieved, that contained items.
+        // From that first page, get the first item
+        return state.pages.firstOrNull { it.data.isNotEmpty() }?.data?.firstOrNull()
+            ?.let { user ->
+                // Get the remote keys of the first items retrieved
+                appDatabase.remoteKeysDao().remoteKeysUserId(user.id)
+            }
+    }
+
+    private suspend fun getRemoteKeyClosestToCurrentPosition(
+        state: PagingState<Int, User>
+    ): RemoteKeys? {
+        // The paging library is trying to load data after the anchor position
+        // Get the item closest to the anchor position
+        return state.anchorPosition?.let { position ->
+            state.closestItemToPosition(position)?.id?.let { userId ->
+                appDatabase.remoteKeysDao().remoteKeysUserId(userId)
+            }
+        }
     }
 }

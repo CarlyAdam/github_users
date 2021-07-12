@@ -12,14 +12,13 @@ import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.carlyadam.github.R
-import com.carlyadam.github.data.api.model.User
+import com.carlyadam.github.data.db.model.User
 import com.carlyadam.github.databinding.FragmentGithubBinding
 import com.carlyadam.github.ui.github.adapter.GithubAdapter
 import com.carlyadam.github.ui.github.adapter.GithubLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import com.carlyadam.github.data.db.model.User as DbUser
 
 @AndroidEntryPoint
 class GithubFragment :
@@ -141,12 +140,11 @@ class GithubFragment :
 
     override fun onFavoriteTap(user: User, favorite: Boolean) {
         user.favorite = favorite
-        val userDb = DbUser(user.id, user.login, user.avatar_url, favorite, user.score)
-        setUserFavorite(userDb, favorite)
+        setUserFavorite(user.id, favorite)
     }
 
-    private fun setUserFavorite(userDb: DbUser, favorite: Boolean) {
-        githubViewModel.setUserFavorite(userDb, favorite)
+    private fun setUserFavorite(id: Long, favorite: Boolean) {
+        githubViewModel.setUserFavorite(id, favorite)
     }
 
     override fun onDestroy() {

@@ -2,13 +2,15 @@ package com.carlyadam.github.data.db.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "user_table")
+@Entity(tableName = "users")
 data class User(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    @PrimaryKey
+    val id: Long,
     val login: String,
-    val avatar: String,
+    @field:SerializedName("avatar_url") val avatar: String,
     var favorite: Boolean,
     val score: Double
 )
+

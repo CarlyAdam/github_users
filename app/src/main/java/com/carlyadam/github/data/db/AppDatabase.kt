@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.carlyadam.github.data.db.dao.RemoteKeysDao
 import com.carlyadam.github.data.db.dao.UserDao
+import com.carlyadam.github.data.db.model.RemoteKeys
 import com.carlyadam.github.data.db.model.User
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
@@ -14,12 +16,13 @@ import net.sqlcipher.database.SupportFactory
  */
 
 @Database(
-    entities = [User::class],
+    entities = [User::class, RemoteKeys::class],
     version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+    abstract fun remoteKeysDao(): RemoteKeysDao
 
     companion object {
 

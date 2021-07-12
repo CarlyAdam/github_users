@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.carlyadam.github.data.api.model.User
+import com.carlyadam.github.data.db.model.User
 import com.carlyadam.github.databinding.ItemUserBinding
 import com.carlyadam.github.utils.loadImage
 
@@ -71,7 +71,7 @@ class GithubAdapter(
 
         fun bind(user: User) {
             binding.apply {
-                imageViewUser.loadImage(context, user.avatar_url, progressBar)
+                imageViewUser.loadImage(context, user.avatar, progressBar)
                 textViewUserName.text = user.login
                 checkBox.isChecked = user.favorite
             }

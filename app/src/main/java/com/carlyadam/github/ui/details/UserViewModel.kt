@@ -7,7 +7,6 @@ import com.carlyadam.github.repository.GithubRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.carlyadam.github.data.db.model.User as DbUser
 
 @HiltViewModel
 class UserViewModel @Inject constructor(
@@ -16,9 +15,9 @@ class UserViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    fun setUserFavorite(user: DbUser, favorite: Boolean) {
+    fun setUserFavorite(id: Long, favorite: Boolean) {
         viewModelScope.launch {
-            githubRepository.setUserFavorite(user, favorite)
+            githubRepository.setUserFavorite(id, favorite)
         }
     }
 }

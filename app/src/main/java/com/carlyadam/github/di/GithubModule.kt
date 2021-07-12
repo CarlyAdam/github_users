@@ -2,7 +2,7 @@ package com.carlyadam.github.di
 
 import android.content.Context
 import com.carlyadam.github.data.api.ApiService
-import com.carlyadam.github.data.db.dao.UserDao
+import com.carlyadam.github.data.db.AppDatabase
 import com.carlyadam.github.repository.GithubRepository
 import dagger.Module
 import dagger.Provides
@@ -19,9 +19,8 @@ object GithubModule {
     @ActivityRetainedScoped
     fun githubRepository(
         apiService: ApiService,
-        @ApplicationContext context: Context,
-        userDao: UserDao
+        appDatabase: AppDatabase
     ): GithubRepository {
-        return GithubRepository(apiService, context, userDao)
+        return GithubRepository(apiService, appDatabase)
     }
 }

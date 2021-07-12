@@ -1,20 +1,24 @@
 package com.carlyadam.github.data.db.dao
 
-import androidx.room.*
+import androidx.paging.PagingSource
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.carlyadam.github.data.db.model.User
 
 @Dao
 interface UserDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(persons: List<User>)
-
-    @Query("SELECT * FROM user_table WHERE favorite= :favorite")
-    suspend fun getUsersFavorite(favorite: Boolean): List<User>
+    @Query("UPDATE users SET favorite =:favorite WHERE id =:id ")
+    suspend fun setUserFavorite(id: Long, favorite: Boolean)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUserFavorite(user: User)
+    suspend fun insertAll(users: List<User>)
 
-    @Delete
-    suspend fun deleteUserFavorite(user: User)
+    @Query("SELECT * FROM users WHERE login LIKE :queryString")
+    fun usersByName(queryString: String): PagingSource<Int, User>
+
+    @Query("DELETE FROM users")
+    suspend fun clearUsers()
 }
