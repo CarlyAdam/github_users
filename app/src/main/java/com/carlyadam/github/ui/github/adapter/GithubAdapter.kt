@@ -45,10 +45,12 @@ class GithubAdapter(
 
             holder.binding.checkBox.apply {
                 this.setOnClickListener {
-                    listener.onFavoriteTap(data,
-                    this.isChecked)
+                    listener.onFavoriteTap(
+                        data,
+                        this.isChecked
+                    )
                 }
-        }
+            }
         }
     }
 

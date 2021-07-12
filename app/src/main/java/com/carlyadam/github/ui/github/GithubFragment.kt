@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -129,16 +130,18 @@ class GithubFragment :
     }
 
     override fun onItemTap(user: User) {
-        // TODO: 7/11/21
+        val action = GithubFragmentDirections.actionGithubUserDetails(user)
+        findNavController().navigate(action)
     }
 
     override fun onFavoriteTap(user: User, favorite: Boolean) {
+        user.favorite = favorite
         val userDb = DbUser(user.id, user.login, user.avatar_url, favorite, user.score)
         setUserFavorite(userDb, favorite)
     }
 
     private fun setUserFavorite(userDb: DbUser, favorite: Boolean) {
-            githubViewModel.setUserFavorite(userDb, favorite)
+        githubViewModel.setUserFavorite(userDb, favorite)
     }
 
     override fun onDestroy() {

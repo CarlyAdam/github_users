@@ -7,4 +7,5 @@
     <string name="search_hint">Search your favorite developers ;)</string>
     <string name="details">Details</string>
     <string name="search">Search</string>
+    <string name="search_error">Please user 3 characters or more to search</string>
 </resources>

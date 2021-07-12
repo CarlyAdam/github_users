@@ -1,5 +1,10 @@
 package com.carlyadam.github.data.api.model
 
+import android.os.Parcel
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class User(
     val avatar_url: String,
     val events_url: String,
@@ -21,4 +26,4 @@ data class User(
     val type: String,
     val url: String,
     var favorite: Boolean
-)
+): Parcelable

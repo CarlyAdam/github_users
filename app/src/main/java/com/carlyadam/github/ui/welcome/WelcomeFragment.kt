@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.carlyadam.github.R
 import com.carlyadam.github.databinding.FragmentWelcomeBinding
+import com.carlyadam.github.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import me.toptas.fancyshowcase.FancyShowCaseView
 
@@ -38,9 +39,14 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
                 SearchView.OnQueryTextListener,
                 android.widget.SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    searchView.setQuery("", false)
-                    val action = WelcomeFragmentDirections.actionWelcomeSearch(query!!)
-                    findNavController().navigate(action)
+                    if (query!!.length >= 3) {
+                        searchView.setQuery("", false)
+                        val action = WelcomeFragmentDirections.actionWelcomeSearch(query!!)
+                        findNavController().navigate(action)
+                    } else {
+                       showToast(requireActivity(),getString(R.string.search_error))
+                    }
+
                     return false
                 }
 
