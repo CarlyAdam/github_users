@@ -7,6 +7,7 @@
         <entry key="app/src/main/res/drawable/searchview_background.xml" value="0.253125" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22291666666666668" />
+        <entry key="app/src/main/res/layout/delete.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_github.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_user_detail.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_welcome.xml" value="0.23697916666666666" />

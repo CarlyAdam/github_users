@@ -65,6 +65,10 @@ class GithubFragment :
             githubdapter.addLoadStateListener { loadState ->
                 binding.apply {
 
+                    swipetorefresh.setOnClickListener {
+                        searchUsers(githubViewModel.getQuery()!!)
+                    }
+
                     shimmerViewContainer.isVisible = loadState.source.refresh is LoadState.Loading
                     recyclerGithub.isVisible =
                         loadState.source.refresh is LoadState.NotLoading
@@ -97,6 +101,7 @@ class GithubFragment :
                 githubdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
             }
         }
+        binding.swipetorefresh.isRefreshing = false
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
