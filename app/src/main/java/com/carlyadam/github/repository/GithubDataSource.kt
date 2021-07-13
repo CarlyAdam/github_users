@@ -1,5 +1,6 @@
 package com.carlyadam.github.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -12,6 +13,7 @@ import com.carlyadam.github.data.db.model.RemoteKeys
 import com.carlyadam.github.data.db.model.User
 import retrofit2.HttpException
 import java.io.IOException
+import java.lang.NullPointerException
 
 private const val GITHUB_STARTING_PAGE_INDEX = 1
 
@@ -67,7 +69,6 @@ class GithubDataSource(
 
         try {
             val apiResponse = service.users(page, 30, query, API_KEY)
-
             val userList = apiResponse.body()!!.items
             val endOfPaginationReached = userList.isEmpty()
             appDatabase.withTransaction {
@@ -81,7 +82,7 @@ class GithubDataSource(
                 appDatabase.userDao().insertAll(userList)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (exception: IOException) {
+        } catch (exception: NullPointerException) {
             return MediatorResult.Error(exception)
         } catch (exception: HttpException) {
             return MediatorResult.Error(exception)

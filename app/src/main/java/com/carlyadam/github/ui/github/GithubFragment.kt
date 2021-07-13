@@ -131,11 +131,13 @@ class GithubFragment :
 
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null) {
+                if (query!!.length >= 3) {
                     binding.recyclerGithub.scrollToPosition(0)
                     githubViewModel.saveQuery(query)
                     searchView.clearFocus()
                     searchUsers(query)
+                } else {
+                    showToast(requireActivity(), getString(R.string.search_error))
                 }
                 return true
             }
