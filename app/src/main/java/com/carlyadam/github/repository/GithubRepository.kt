@@ -16,15 +16,14 @@ class GithubRepository(
 ) {
 
     fun users(query: String): Flow<PagingData<User>> {
-        // appending '%' so we can allow other characters to be before and after the query string
-        val dbQuery = "%${query.replace(' ', '%')}%"
-        val pagingSourceFactory = { appDatabase.userDao().usersByName(dbQuery) }
+        val finalQuery ="%$query%"
+        val pagingSourceFactory = { appDatabase.userDao().usersByName(finalQuery) }
 
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(pageSize = NETWORK_PAGE_SIZE, enablePlaceholders = false),
             remoteMediator = GithubDataSource(
-                dbQuery,
+                query,
                 apiService,
                 appDatabase
             ),

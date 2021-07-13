@@ -14,7 +14,6 @@ import retrofit2.HttpException
 import java.io.IOException
 
 private const val GITHUB_STARTING_PAGE_INDEX = 1
-const val IN_QUALIFIER = "in:name,description"
 
 @OptIn(ExperimentalPagingApi::class)
 class GithubDataSource(
@@ -66,18 +65,16 @@ class GithubDataSource(
             }
         }
 
-        val apiQuery = query + IN_QUALIFIER
-
         try {
-            val apiResponse = service.users(page, state.config.pageSize, apiQuery, API_KEY)
+            val apiResponse = service.users(page, 30, query, API_KEY)
 
             val userList = apiResponse.body()!!.items
             val endOfPaginationReached = userList.isEmpty()
             appDatabase.withTransaction {
                 // clear all tables in the database
                 if (loadType == LoadType.REFRESH) {
-                    appDatabase.remoteKeysDao().clearRemoteKeys()
-                    appDatabase.userDao().clearUsers()
+                    //appDatabase.remoteKeysDao().clearRemoteKeys()
+                    //appDatabase.userDao().clearUsers()
                 }
                 val prevKey = if (page == GITHUB_STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1

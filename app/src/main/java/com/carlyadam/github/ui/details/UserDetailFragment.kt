@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.carlyadam.github.R
-import com.carlyadam.github.data.db.model.User
+import com.carlyadam.github.data.api.model.User
 import com.carlyadam.github.databinding.FragmentUserDetailBinding
 import com.carlyadam.github.utils.loadImage
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,7 +44,7 @@ class UserDetailFragment : Fragment(R.layout.fragment_user_detail) {
             checkBox.isChecked = user.favorite
             checkBox.apply {
                 this.setOnClickListener {
-                    val userDb = com.carlyadam.github.data.db.model.User(
+                    val userDb = User(
                         user.id,
                         user.login,
                         user.avatar,

@@ -9,7 +9,7 @@ import com.carlyadam.github.data.db.model.RemoteKeys
 @Dao
 interface RemoteKeysDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(remoteKey: List<RemoteKeys>)
 
     @Query("SELECT * FROM remote_keys WHERE userId = :userId")

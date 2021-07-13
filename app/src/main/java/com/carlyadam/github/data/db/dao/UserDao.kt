@@ -13,7 +13,7 @@ interface UserDao {
     @Query("UPDATE users SET favorite =:favorite WHERE id =:id ")
     suspend fun setUserFavorite(id: Long, favorite: Boolean)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(users: List<User>)
 
     @Query("SELECT * FROM users WHERE login LIKE :queryString")

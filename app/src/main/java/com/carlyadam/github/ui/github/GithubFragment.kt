@@ -19,6 +19,7 @@ import com.carlyadam.github.ui.github.adapter.GithubLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import com.carlyadam.github.data.api.model.User as ApiUser
 
 @AndroidEntryPoint
 class GithubFragment :
@@ -134,7 +135,8 @@ class GithubFragment :
     }
 
     override fun onItemTap(user: User) {
-        val action = GithubFragmentDirections.actionGithubUserDetails(user)
+        val apiUser = ApiUser(user.id, user.login, user.avatar, user.favorite, user.score)
+        val action = GithubFragmentDirections.actionGithubUserDetails(apiUser)
         findNavController().navigate(action)
     }
 
