@@ -78,7 +78,6 @@ class GithubDataSource(
                 }
                 appDatabase.remoteKeysDao().insertAll(keys)
 
-
                 appDatabase.userDao().insertAll(userList)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)

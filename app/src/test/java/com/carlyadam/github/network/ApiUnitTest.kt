@@ -1,9 +1,9 @@
 package com.carlyadam.github.network
 
-import com.carlyadam.github.utils.MockResponseFileReader
 import com.carlyadam.github.data.api.ApiService
 import com.carlyadam.github.data.api.ApiService.Companion.API_KEY
 import com.carlyadam.github.data.api.responses.GithubResponse
+import com.carlyadam.github.utils.MockResponseFileReader
 import com.google.gson.Gson
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse

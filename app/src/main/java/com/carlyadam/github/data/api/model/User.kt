@@ -11,4 +11,3 @@ data class User(
     var favorite: Boolean,
     val score: Double
 ) : Parcelable
-

@@ -9,14 +9,13 @@ import com.carlyadam.github.data.db.AppDatabase
 import com.carlyadam.github.data.db.model.User
 import kotlinx.coroutines.flow.Flow
 
-
 class GithubRepository(
     private val apiService: ApiService,
     private val appDatabase: AppDatabase
 ) {
 
     fun users(query: String): Flow<PagingData<User>> {
-        val finalQuery ="%$query%"
+        val finalQuery = "%$query%"
         val pagingSourceFactory = { appDatabase.userDao().usersByName(finalQuery) }
 
         @OptIn(ExperimentalPagingApi::class)

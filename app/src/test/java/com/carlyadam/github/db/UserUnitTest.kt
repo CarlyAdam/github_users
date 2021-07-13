@@ -39,15 +39,17 @@ class UserUnitTest {
         // given
         val userTest: User = User(1, "carlyadam", "http://test.png", true, 5.0)
 
-        // when
-        database!!.userDao().insertUserFavorite(userTest)
+        val userList = ArrayList<User>()
+        userList.add(userTest)
 
-        val result = database!!.userDao().getUsersFavorite(true)
+        // when
+        database!!.userDao().insertAll(userList)
+
+        val result = database!!.userDao().usersByName("carlyadam")
 
         // then
-        assertEquals(userTest, result[0])
+        assertEquals(userTest, result)
     }
-
 
     @After
     @Throws(Exception::class)
@@ -55,4 +57,3 @@ class UserUnitTest {
         database!!.close()
     }
 }
-

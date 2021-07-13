@@ -36,11 +36,10 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        //encripting database
+        // encripting database
         var testBytes = charArrayOf('t', 'e', 's', 't')
         val passphrase = SQLiteDatabase.getBytes(testBytes)
         val factory = SupportFactory(passphrase)
-
 
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(

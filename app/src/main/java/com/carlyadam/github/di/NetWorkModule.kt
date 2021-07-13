@@ -1,9 +1,9 @@
 package com.carlyadam.github.di
 
 import android.content.Context
-import com.carlyadam.github.utils.NetworkConnectionInterceptor
 import com.carlyadam.github.data.api.ApiService
 import com.carlyadam.github.data.api.ApiService.Companion.API_URL
+import com.carlyadam.github.utils.NetworkConnectionInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

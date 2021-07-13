@@ -67,9 +67,9 @@ class GithubFragment :
                 githubdapter.retry()
             }
 
-             swipetorefresh.setOnRefreshListener {
-                 searchUsers(githubViewModel.getQuery()!!)
-             }
+            swipetorefresh.setOnRefreshListener {
+                searchUsers(githubViewModel.getQuery()!!)
+            }
 
             githubdapter.addLoadStateListener { loadState ->
 
@@ -103,7 +103,6 @@ class GithubFragment :
                     showToast(requireActivity(), "${it.error}")
                 }
             }
-
         }
 
         setHasOptionsMenu(true)

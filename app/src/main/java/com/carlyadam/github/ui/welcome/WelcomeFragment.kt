@@ -36,24 +36,24 @@ class WelcomeFragment : Fragment(R.layout.fragment_welcome) {
             createShowCase(searchView)
 
             searchView.setOnQueryTextListener(object :
-                SearchView.OnQueryTextListener,
-                android.widget.SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (query!!.length >= 3) {
-                        searchView.setQuery("", false)
-                        val action = WelcomeFragmentDirections.actionWelcomeSearch(query!!)
-                        findNavController().navigate(action)
-                    } else {
-                       showToast(requireActivity(),getString(R.string.search_error))
+                    SearchView.OnQueryTextListener,
+                    android.widget.SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        if (query!!.length >= 3) {
+                            searchView.setQuery("", false)
+                            val action = WelcomeFragmentDirections.actionWelcomeSearch(query!!)
+                            findNavController().navigate(action)
+                        } else {
+                            showToast(requireActivity(), getString(R.string.search_error))
+                        }
+
+                        return false
                     }
 
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    return false
-                }
-            })
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        return false
+                    }
+                })
         }
     }
 

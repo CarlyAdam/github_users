@@ -47,6 +47,6 @@ fun ImageView.loadImage(context: Context, url: String, progressBar: View) {
         .into(this)
 }
 
-fun Fragment.showToast(context: Context, message: String){
-    Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
+fun Fragment.showToast(context: Context, message: String) {
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
