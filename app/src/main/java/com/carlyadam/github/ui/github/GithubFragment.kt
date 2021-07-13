@@ -16,6 +16,7 @@ import com.carlyadam.github.data.db.model.User
 import com.carlyadam.github.databinding.FragmentGithubBinding
 import com.carlyadam.github.ui.github.adapter.GithubAdapter
 import com.carlyadam.github.ui.github.adapter.GithubLoadStateAdapter
+import com.carlyadam.github.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -34,12 +35,18 @@ class GithubFragment :
     private lateinit var searchItem: MenuItem
     private val args by navArgs<GithubFragmentArgs>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        githubViewModel.saveQuery(args.query)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentGithubBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -48,8 +55,6 @@ class GithubFragment :
         githubdapter = GithubAdapter(this, requireActivity())
 
         binding.apply {
-            githubViewModel.saveQuery(args.query)
-
             recyclerGithub.layoutManager = LinearLayoutManager(requireActivity())
 
             githubdapter.withLoadStateFooter(
@@ -62,30 +67,43 @@ class GithubFragment :
                 githubdapter.retry()
             }
 
+             swipetorefresh.setOnRefreshListener {
+                 searchUsers(githubViewModel.getQuery()!!)
+             }
+
             githubdapter.addLoadStateListener { loadState ->
-                binding.apply {
 
-                    swipetorefresh.setOnClickListener {
-                        searchUsers(githubViewModel.getQuery()!!)
-                    }
+                // show empty list
+                val isListEmpty =
+                    loadState.refresh is LoadState.NotLoading && githubdapter.itemCount == 0
+                if (isListEmpty) {
+                    recyclerGithub.isVisible = false
+                    textViewEmpty.isVisible = true
+                } else {
+                    textViewEmpty.isVisible = false
+                }
 
-                    shimmerViewContainer.isVisible = loadState.source.refresh is LoadState.Loading
-                    recyclerGithub.isVisible =
-                        loadState.source.refresh is LoadState.NotLoading
-                    buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                    textViewError.isVisible = loadState.source.refresh is LoadState.Error
-
-                    if (loadState.source.refresh is LoadState.NotLoading &&
-                        loadState.append.endOfPaginationReached &&
-                        githubdapter.itemCount < 1
-                    ) {
-                        recyclerGithub.isVisible = false
-                        textViewEmpty.isVisible = true
-                    } else {
-                        textViewEmpty.isVisible = false
-                    }
+                // Only show the list if refresh succeeds, either from the the local db or the remote.
+                binding.recyclerGithub.isVisible =
+                    loadState.source.refresh is LoadState.NotLoading || loadState.mediator?.refresh is LoadState.NotLoading
+                // Show loading spinner during initial load or refresh.
+                shimmerViewContainer.isVisible =
+                    loadState.mediator?.refresh is LoadState.Loading
+                // Show the retry state if initial load or refresh fails and there are no items.
+                buttonRetry.isVisible =
+                    loadState.mediator?.refresh is LoadState.Error && githubdapter.itemCount == 0
+                textViewError.isVisible =
+                    loadState.mediator?.refresh is LoadState.Error && githubdapter.itemCount == 0
+                // Toast on any error, regardless of whether it came from RemoteMediator or PagingSource
+                val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                    ?: loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+                errorState?.let {
+                    showToast(requireActivity(), "${it.error}")
                 }
             }
+
         }
 
         setHasOptionsMenu(true)
@@ -96,12 +114,12 @@ class GithubFragment :
     }
 
     private fun searchUsers(query: String) {
+        binding.swipetorefresh.isRefreshing = false
         viewLifecycleOwner.lifecycleScope.launch {
             githubViewModel.users(query).collectLatest { pagingData ->
                 githubdapter.submitData(viewLifecycleOwner.lifecycle, pagingData)
             }
         }
-        binding.swipetorefresh.isRefreshing = false
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -151,6 +169,7 @@ class GithubFragment :
 
     override fun onDestroy() {
         super.onDestroy()
+        this.arguments?.clear()
         _binding = null
     }
 }

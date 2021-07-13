@@ -71,11 +71,6 @@ class GithubDataSource(
             val userList = apiResponse.body()!!.items
             val endOfPaginationReached = userList.isEmpty()
             appDatabase.withTransaction {
-                // clear all tables in the database
-                if (loadType == LoadType.REFRESH) {
-                    //appDatabase.remoteKeysDao().clearRemoteKeys()
-                    //appDatabase.userDao().clearUsers()
-                }
                 val prevKey = if (page == GITHUB_STARTING_PAGE_INDEX) null else page - 1
                 val nextKey = if (endOfPaginationReached) null else page + 1
                 val keys = userList.map {

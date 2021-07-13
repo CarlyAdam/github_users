@@ -15,6 +15,10 @@
             app:argType="string" />
         <action
             android:id="@+id/action_github_user_details"
+            app:enterAnim="@anim/left_in"
+            app:exitAnim="@anim/left_out"
+            app:popEnterAnim="@anim/right_in"
+            app:popExitAnim="@anim/right_out"
             app:destination="@id/userDetailFragment" />
     </fragment>
     <fragment
