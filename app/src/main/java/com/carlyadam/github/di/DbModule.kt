@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.carlyadam.github.data.db.AppDatabase
 import com.carlyadam.github.data.db.dao.UserDao
+import com.carlyadam.github.utils.Constans.DB_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,7 @@ object DbModule {
         return Room.databaseBuilder(
             appContext,
             AppDatabase::class.java,
-            "Github"
+            DB_NAME
         ).build()
     }
 

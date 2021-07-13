@@ -8,6 +8,7 @@ import com.carlyadam.github.data.db.dao.RemoteKeysDao
 import com.carlyadam.github.data.db.dao.UserDao
 import com.carlyadam.github.data.db.model.RemoteKeys
 import com.carlyadam.github.data.db.model.User
+import com.carlyadam.github.utils.Constans.DB_NAME
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SupportFactory
 
@@ -45,7 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
             Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "GITHUB"
+                DB_NAME
             )
                 .openHelperFactory(factory)
                 .build()

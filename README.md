@@ -16,6 +16,7 @@
 * ✔️ [Leakcanary](https://github.com/square/leakcanary)
 * ✔️ [KtLint](https://github.com/pinterest/ktlint)
 * ✔️ [Pagination](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
+* ✔️ [RemoteMediator](https://developer.android.com/topic/libraries/architecture/paging/v3-network-db)
 * ✔️ [Flow](https://developer.android.com/kotlin/flow)
 * ✔️ [Shimmer](https://github.com/facebook/shimmer-android)
 * ✔️ [Glide](https://github.com/bumptech/glide)
