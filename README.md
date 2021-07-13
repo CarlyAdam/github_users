@@ -32,7 +32,7 @@
 
 ### Apk
 
-* -You can find the apk file [here](apk/giphy.apk)
+* -You can find the apk file [here](apk/github.apk)
 
 ### Test
 
