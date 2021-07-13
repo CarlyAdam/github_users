@@ -1,5 +1,6 @@
 package com.carlyadam.github.repository
 
+import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -11,7 +12,8 @@ import kotlinx.coroutines.flow.Flow
 
 class GithubRepository(
     private val apiService: ApiService,
-    private val appDatabase: AppDatabase
+    private val appDatabase: AppDatabase,
+    private val context: Context
 ) {
 
     fun users(query: String): Flow<PagingData<User>> {
@@ -24,7 +26,8 @@ class GithubRepository(
             remoteMediator = GithubDataSource(
                 query,
                 apiService,
-                appDatabase
+                appDatabase,
+                context
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow

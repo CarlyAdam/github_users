@@ -1,19 +1,18 @@
 package com.carlyadam.github.repository
 
-import android.util.Log
+import android.content.Context
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
+import com.carlyadam.github.R
 import com.carlyadam.github.data.api.ApiService
 import com.carlyadam.github.data.api.ApiService.Companion.API_KEY
 import com.carlyadam.github.data.db.AppDatabase
 import com.carlyadam.github.data.db.model.RemoteKeys
 import com.carlyadam.github.data.db.model.User
 import retrofit2.HttpException
-import java.io.IOException
-import java.lang.NullPointerException
 
 private const val GITHUB_STARTING_PAGE_INDEX = 1
 
@@ -21,7 +20,8 @@ private const val GITHUB_STARTING_PAGE_INDEX = 1
 class GithubDataSource(
     private val query: String,
     private val service: ApiService,
-    private val appDatabase: AppDatabase
+    private val appDatabase: AppDatabase,
+    private val context: Context
 ) : RemoteMediator<Int, User>() {
 
     override suspend fun initialize(): InitializeAction {
@@ -69,20 +69,24 @@ class GithubDataSource(
 
         try {
             val apiResponse = service.users(page, 30, query, API_KEY)
-            val userList = apiResponse.body()!!.items
-            val endOfPaginationReached = userList.isEmpty()
-            appDatabase.withTransaction {
-                val prevKey = if (page == GITHUB_STARTING_PAGE_INDEX) null else page - 1
-                val nextKey = if (endOfPaginationReached) null else page + 1
-                val keys = userList.map {
-                    RemoteKeys(userId = it.id, prevKey = prevKey, nextKey = nextKey)
-                }
-                appDatabase.remoteKeysDao().insertAll(keys)
+            if (apiResponse.code() == 200) {
+                val userList = apiResponse.body()!!.items
+                val endOfPaginationReached = userList.isEmpty()
+                appDatabase.withTransaction {
+                    val prevKey = if (page == GITHUB_STARTING_PAGE_INDEX) null else page - 1
+                    val nextKey = if (endOfPaginationReached) null else page + 1
+                    val keys = userList.map {
+                        RemoteKeys(userId = it.id, prevKey = prevKey, nextKey = nextKey)
+                    }
+                    appDatabase.remoteKeysDao().insertAll(keys)
 
-                appDatabase.userDao().insertAll(userList)
+                    appDatabase.userDao().insertAll(userList)
+                }
+                return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            } else {
+                return MediatorResult.Error(Exception(context.getString(R.string.no_connection)))
             }
-            return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
-        } catch (exception: NullPointerException) {
+        } catch (exception: Exception) {
             return MediatorResult.Error(exception)
         } catch (exception: HttpException) {
             return MediatorResult.Error(exception)
