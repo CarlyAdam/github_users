@@ -59,6 +59,7 @@
 * Integrate Snapshot test with [Firebase Test Lab](https://firebase.google.com/products/test-lab)
 * Create unit test for different pagination scenarios.
 * Check and test leakcanary memory leaks reports.
+* Check bitrise builds.
 
 
 
