@@ -21,6 +21,8 @@
 * ✔️ [Shimmer](https://github.com/facebook/shimmer-android)
 * ✔️ [Glide](https://github.com/bumptech/glide)
 * ✔️ [Firebase](https://firebase.google.com)
+* ✔️ [Room](https://developer.android.com/jetpack/androidx/releases/room)
+* ✔️ [FancyShowCaseView](https://github.com/faruktoptas/FancyShowCaseView)
 
 
 ### How to build
